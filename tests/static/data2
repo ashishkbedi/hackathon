@@ -5,7 +5,7 @@
       "overall":
        [
           {
-            "timestamp":"2017-03-12 13:34:54",
+            "timestamp":"2017-03-15 13:34:54",
             "score":0.34,
             "text":"the food was so bad that i had to throw up"
           },
@@ -54,17 +54,17 @@
        [
           {
             "timestamp":"2017-03-12 13:34:54",
-            "score":0.34,
+            "score":0.14,
             "text":"the food was so bad that i had to throw up"
           },
           {
             "timestamp":"2017-03-13 13:34:54",
-            "score":0.34,
+            "score":0.14,
             "text":"the food was so bad that i had to throw up"
           },
           {
             "timestamp":"2017-03-14 13:34:54",
-            "score":0.34,
+            "score":0.14,
             "text":"the food was so bad that i had to throw up"
           }
 
@@ -75,17 +75,17 @@
        [
           {
             "timestamp":"2017-03-12 13:34:54",
-            "score":0.34,
+            "score":0.14,
             "text":"the food was so bad that i had to throw up"
           },
           {
             "timestamp":"2017-03-13 13:34:54",
-            "score":0.34,
+            "score":0.14,
             "text":"the food was so bad that i had to throw up"
           },
           {
             "timestamp":"2017-03-14 13:34:54",
-            "score":0.34,
+            "score":0.14,
             "text":"the food was so bad that i had to throw up"
           }
 

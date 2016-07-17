@@ -35,7 +35,6 @@ div.tooltip {
 
 <!-- load the d3.js library -->
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
 
 <script>
 
@@ -110,9 +109,10 @@ function myVal(restaurant,feature,timestamp,windowt,totdata) {
 
     for (key in totdata[restaurant]){
       var val=myVal(restaurant,key,timestamp,windowt,totdata);
-      var valr=val[0]
-      var stringD=val[1]
-      var url="{{ url_for('showText')}}?stringData="+stringD
+      var valr=val[0];
+      var stringD=val[1];
+
+      var url="{{ url_for('showText')}}?stringData="+stringD;
       var keylink='<a href='+'"'+url+'" target="_blank">'+key+"</a>";
       htmlString+=keylink+" : "+valr+"<br\/>";
     }
@@ -120,7 +120,7 @@ function myVal(restaurant,feature,timestamp,windowt,totdata) {
   }
 
 var totdata,data;
-function buildGraph(restaurant,feature)
+function buildGraph(rest1,rest2,feature)
 {
   // Get the data
   d3.json("/data", function(error, totdata) {
@@ -138,34 +138,73 @@ function buildGraph(restaurant,feature)
 
     }
 
-    data=totdata[restaurant][feature];
+    data=totdata[rest1][feature];
+    var data2=totdata[rest2][feature];
     console.log(data);
+    console.log(data2);
       // Scale the range of the data
-      x.domain(d3.extent(data, function(d) { return d.timestamp; }));
-      y.domain([0, d3.max(data, function(d) { return d.score; })]);
+    var de1= d3.extent(data, function(d) { return d.timestamp; });
+    var de2= d3.extent(data2, function(d) { return d.timestamp; });
+    if(de1[0]>de2[0])
+      de1[0]=de2[0];
+    if(de1[1]<de2[1])
+        de1[1]=de2[1];
+  x.domain(de1);
+
+
+    //console.log([0, d3.max(data, function(d) { return d.score; })]);
+    //
+    var max1=d3.max(data, function(d) { return d.score; });
+    var max2=d3.max(data2, function(d) { return d.score; });
+    if(max1<max2)
+     max1=max2;
+    y.domain([0,max1]);
 
       // Add the valueline path.
+
       svg.append("path")
           .attr("class", "line")
           .attr("d", valueline(data));
+;
+          svg.append("path")
+              .attr("class", "line")
+              .attr("d", valueline(data2));
 
       // Add the scatterplot
       svg.selectAll("dot")
-          .data(data)
-      .enter().append("circle")
-          .attr("r", 5)
-          .attr("cx", function(d) { return x(d.timestamp); })
-          .attr("cy", function(d) { return y(d.score); })
-          .on("click", function(d) {
+           .data(data)
+       .enter().append("circle")
+           .attr("r", 5)
+           .attr("cx", function(d) { return x(d.timestamp); })
+           .attr("cy", function(d) { return y(d.score); })
+           .on("click", function(d) {
 
-              div.transition()
-                  .style("opacity", .9);
-              div .html(genHoverHtml(restaurant,d.timestamp,24,totdata))
-                  .style("left", (d3.event.pageX) + "px")
-                  .style("top", (d3.event.pageY - 40) + "px");
+               div.transition()
+                   .style("opacity", .9);
+               div .html(genHoverHtml(rest1,d.timestamp,24,totdata))
+                   .style("left", (d3.event.pageX) + "px")
+                   .style("top", (d3.event.pageY - 40) + "px");
 
 
-              });
+               });
+
+               // Add the scatterplot
+         svg.selectAll("dot")
+                .data(data2)
+                .enter().append("circle")
+                    .attr("r", 5)
+                    .attr("cx", function(d) { return x(d.timestamp); })
+                    .attr("cy", function(d) { return y(d.score); })
+                    .on("click", function(d) {
+
+                        div.transition()
+                            .style("opacity", .9);
+                        div .html(genHoverHtml(rest2,d.timestamp,24,totdata))
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 40) + "px");
+
+
+                  });
 
       // Add the X Axis
       svg.append("g")
@@ -183,13 +222,10 @@ function buildGraph(restaurant,feature)
 
 
 }
-buildGraph("Truffles","Food");
-// var hoverdiv= document.getElementsByTagName("body");
-// console.log(hoverdiv);
-// hoverdiv[0].addEventListener("click", func1, false);
-// function func1()
-// {
-//   document.getElementsByClassName("tooltip")[0].setAttribute("style", "opacity:0;");
-// }
+buildGraph("rest1","rest2","overall");
+
+div.transition()
+    .style("opacity", 0);
+
 </script>
 </body>
